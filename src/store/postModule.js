@@ -1,5 +1,7 @@
-export const postModule = {
-   state: () => ({
+import axios from 'axios';
+ 
+ export const postModule = {
+    state: () => ({
       posts: [],
       isPostLoading: false,
       selectedSort: '',
@@ -11,8 +13,8 @@ export const postModule = {
          {value: 'title', name: 'По названию'},
          {value: 'body', name: 'По содержимому'},
       ]
-   }),
-   getters: {
+    }),
+    getters: {
       sortedPosts(state) {
          return [...state.posts].sort((post1, post2) => {
             return post1[state.selectedSort]?.localeCompare(post2[state.selectedSort])
@@ -21,8 +23,8 @@ export const postModule = {
       sortedAndSearchedPosts(state, getters) {
          return getters.sortedPosts.filter(post => post.title.toLowerCase().includes(state.searchQuery.toLowerCase()))
       }
-   },
-   mutation: {
+    },
+    mutation: {
       setPosts(state, posts) {
          state.posrs = posts
       },
@@ -41,8 +43,8 @@ export const postModule = {
       setTotalPages(state, totalPages) {
          state.totalPages = totalPages
       },
-   },
-   actions: {
+    },
+    actions: {
       async fetchPosts({state, commit}) {
          try {
             commit('setLoading', true)
@@ -74,7 +76,7 @@ export const postModule = {
          } catch (e) {
             console.log(e);
          } finally {
-            // this.isPostLoading = false //  переделка в бесконечный список
+            
          }
       }
    },

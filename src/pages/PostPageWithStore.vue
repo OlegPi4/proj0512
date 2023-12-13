@@ -1,8 +1,7 @@
 <template>
    <section>
-      <h2>Страница с постами</h2>
-      <!-- <h3>{{ $store.state.post.limit }}</h3> -->
-      <!-- <my-input
+      <h2>Страница с постами Store</h2>
+         <!-- <my-input
          v-model="searchQuery" 
          placeholder="Поиск.... "  
          v-focus
@@ -13,6 +12,7 @@
          >
             Создать пост
          </my-button>
+         
          <!-- <my-select 
             v-model="selectedSort"
             :options="sortOptions"
@@ -24,13 +24,13 @@
       </my-dialog>
       <div>
          <div class="app-posts">
-            <post-list :posts="sortedAndSearchedPosts"
+            <post-list :posts="$store.getters.post/sortedAndSearchedPosts"
             @remove="removePost"
             v-if="!isPostLoading"
             />
             <h3 v-else> Загрузка данных... </h3>
             <div v-intersection="loadMorePosts" class="observer"></div>
-           
+            
          </div>
       </div>
       
@@ -42,10 +42,9 @@ import PostForm from '@/components/PostForm.vue'
 import PostList from '@/components/PostList.vue'
 import MyButton from '@/components/UI/MyButton.vue'
 import MyDialog from '@/components/UI/MyDialog.vue'
-import axios from 'axios';
+//import axios from 'axios';
 import MySelect from '@/components/UI/MySelect.vue'
 import MyInput from '@/components/UI/MyInput.vue'
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 
 
 export default {
@@ -58,7 +57,7 @@ export default {
       MyInput,
    },
    data(){
-      return {     // Vuex
+      return {
          // posts: [],
          dialogVisible: false,
          // isPostLoading: false,
@@ -70,19 +69,10 @@ export default {
          // sortOptions: [
          //    {value: 'title', name: 'По названию'},
          //    {value: 'body', name: 'По содержимому'},
-         //    //{value: 'id', name: 'По id'},  по id помилка
          // ]
       }
    },
    methods: {
-      ...mapMutations({
-         setPage: 'post/setPage',
-
-      }),
-      ...mapActions({
-         loadMorePosts: 'post/loadMorePosts',
-         fetchPosts: 'post/fetchPosts'
-      }),
       createPost(post) {
          this.posts.push(post)  
       },
@@ -92,10 +82,8 @@ export default {
       showDialog() {
          this.dialogVisible = true
       },
-      // changePage(pageNumber) {  // переделка в добавляющийся список
-      //    this.page = pageNumber
-      // },
-      // async fetchPosts() {  // Vuex
+      
+      // async fetchPosts() {
       //    try {
       //       this.isPostLoading = true
       //       const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
@@ -115,7 +103,6 @@ export default {
       // async loadMorePosts() {
       //    try {
       //       this.page += 1
-      //       // this.isPostLoading = true // переделка в бесконечный список
       //       const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
       //          params: {
       //          _page: this.page,
@@ -127,31 +114,17 @@ export default {
       //    } catch (e) {
       //       alert('Ошибка получения данных')
       //    } finally {
-      //       // this.isPostLoading = false //  переделка в бесконечный список
+      
       //    }
       // }
    },
    mounted() {
-      this.fetchPosts();   //закоментированый ниже код перенесен в пользовательскую директиву VIntersection
-      // const options = {
-      //    //root: document.querySelector("#scrollArea"), не испотльзуем
-      //    rootMargin: "0px",
-      //    threshold: 1.0,
-      // };
-      // const callback = (entries, observer) => {
-      //    if (entries[0].isIntersecting && this.page < this.totalPages ) {
-      //       this.loadMorePosts()
-      //    }
-      // };
-      // const observer = new IntersectionObserver(callback, options);
-      //       observer.observe(this.$refs.observer);
-         },
-   watch: {
-      // page() {  // переделка в бесконечный список
-      //    this.fetchPosts();
-      // }
+      store.action.post.fetchPosts(); 
+      
    },
-   computed: {  // Vuex
+   watch: {
+   },
+   computed: {
       // sortedPosts() {
       //    return [...this.posts].sort((post1, post2) => {
       //       return post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
@@ -160,20 +133,6 @@ export default {
       // sortedAndSearchedPosts() {
       //    return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
       // }
-      ...mapState({
-         posts: state => state.post.posts,
-         isPostLoading: state => state.post.isPostLoading,
-         selectedSort: state => state.post.selectedSort,
-         searchQuery: state => state.post.searchQuery,
-         page: state => state.post.page,
-         limit: state => state.post.limit,
-         totalPages: state => state.post.totalPages,
-         sortOptions: state => state.post.sortOptions,
-      }),
-      ...mapGetters({
-         sortedPosts: 'post/sortedPosts',
-         sortedAndSearchedPosts: 'post/sortedAndSearchedPosts',
-      }), 
    },
 }
 </script>
