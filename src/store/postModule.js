@@ -46,6 +46,7 @@ import axios from 'axios';
     },
     actions: {
       async fetchPosts({state, commit}) {
+         console.log('in fetch');
          try {
             commit('setLoading', true)
             const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {

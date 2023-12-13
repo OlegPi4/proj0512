@@ -1,11 +1,15 @@
 <template>
    <section>
       <h2>Страница с постами Store</h2>
-         <!-- <my-input
+     
+      <!-- <my-input
          v-model="searchQuery" 
          placeholder="Поиск.... "  
          v-focus
       /> -->
+            
+        
+
       <div class="app__btns">
          <my-button
             @click="showDialog"
@@ -119,7 +123,7 @@ export default {
       // }
    },
    mounted() {
-      store.action.post.fetchPosts(); 
+      this.$store.dispatch('fetchPosts'); 
       
    },
    watch: {
