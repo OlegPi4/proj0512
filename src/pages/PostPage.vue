@@ -173,6 +173,7 @@ export default {
       box-sizing: border-box;
    }
    section {
+      padding-top: 80px;
       width: 1100px;
       margin: 10px auto;
    }

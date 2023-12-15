@@ -14,7 +14,8 @@ export default {
 
 <style>
 .contain {
-   max-width: 1100px;
-   margin: 0 auto;
+  padding-top: 80px;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 </style>

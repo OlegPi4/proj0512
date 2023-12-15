@@ -32,9 +32,9 @@ export default {
       },
    }, 
    mounted() {
-     console.log(this.id);
      this.fetchPostId()
    },
+         
 }
     
    
@@ -43,6 +43,7 @@ export default {
    
 <style>
    .contain {
+      padding-top: 80px;
       width: 1100px;
       margin: 0 auto;
    }

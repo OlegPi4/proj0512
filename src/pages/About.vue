@@ -12,6 +12,7 @@ export default {
 
 <style>
 .contain {
+  padding-top: 80px;
   max-width: 1100px;
   margin: 0 auto;
 }

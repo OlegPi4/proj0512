@@ -6,17 +6,19 @@ import axios from 'axios';
       isPostLoading: false,
       selectedSort: '',
       searchQuery: '',
-      page: 1,
+      page: 0,
       limit: 10,
       totalPages: 0,
       sortOptions: [
          {value: 'title', name: 'По названию'},
          {value: 'body', name: 'По содержимому'},
+         //{value: 'userId', name: 'По user'}
       ]
     }),
     getters: {
       sortedPosts(state) {
          return [...state.posts].sort((post1, post2) => {
+
             return post1[state.selectedSort]?.localeCompare(post2[state.selectedSort])
          })
       },
@@ -24,29 +26,31 @@ import axios from 'axios';
          return getters.sortedPosts.filter(post => post.title.toLowerCase().includes(state.searchQuery.toLowerCase()))
       }
     },
-    mutation: {
+    mutations: {
       setPosts(state, posts) {
-         state.posrs = posts
+         state.posts = posts;
       },
       setLoading(state, bool) {
-         state.isPostLoading = bool
+         state.isPostLoading = bool;
       },
       setSelectedSort(state, selectedSort) {
-         state.selectedSort = selectedSort
+         state.selectedSort = selectedSort;
       },
       setSearcQuery(state, searchQuery) {
-         state.searchQuery = searchQuery
+         state.searchQuery = searchQuery;
       },
       setPage(state, page) {
-         state.page = page
+         state.page = page;
       },
       setTotalPages(state, totalPages) {
-         state.totalPages = totalPages
+         state.totalPages = totalPages;
       },
     },
     actions: {
+      delPost({state, commit}, post){
+         commit('setPosts', state.posts.filter(p => p.id != post.id) )
+      },
       async fetchPosts({state, commit}) {
-         console.log('in fetch');
          try {
             commit('setLoading', true)
             const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
@@ -81,5 +85,5 @@ import axios from 'axios';
          }
       }
    },
-   namespased: true
+   namespaced: true
 }

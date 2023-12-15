@@ -4,7 +4,8 @@
    <div class="navbar__btns">
       <my-button class="nav-btn" @click="$router.push('/posts')"> Посты</my-button>
       <my-button class="nav-btn" @click="$router.push('/about')">О сайте</my-button>
-      <my-button class="nav-btn" @click="$router.push('/store')">Store</my-button>
+      <my-button class="nav-btn" @click="$router.push('/store')"> Посты Store</my-button>
+      
    </div>
 
   </div>
@@ -21,6 +22,12 @@ export default {
 
 <style>
    .navbar {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%); 
+      width: 100%;
+      z-index: 5;
       max-width: 1100px;
       margin: 0 auto;
       padding: 0 20px;
