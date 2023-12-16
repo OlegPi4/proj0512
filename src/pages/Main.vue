@@ -20,7 +20,7 @@
         <ul class="section-under">
           <li>  "Посты"  со стандартным подходом;</li>
           <li>  "Посты Store" c использованием Vuex;</li>
-          <li>  "Посты Compos" с использованием Composition API;</li>
+          <li>  "Посты Compose" с использованием Composition API;</li>
         </ul>
       </li>  
       </ul>
@@ -50,11 +50,12 @@
     <ul class="section-main">
       <li>  toggleMixin  -  тогл.</li>
     </ul>
-    
-
-   </div>
-   <!-- <router-link to="/posts">Посты</router-link>
-   <router-link to="/about">О сайте</router-link>  -->
+  </div>
+  <h4>Функционал "Посты Compose" ограничен, исключены функции: </h4>
+    <ul class="section-main">
+      <li>  Создание / Удаление поста</li>
+      <li>  Подгрузка постов по скролу к последнему;</li>
+    </ul> 
   </div>
 </template>
 

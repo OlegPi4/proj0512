@@ -3,7 +3,7 @@
    <div class="name-site"  @click="$router.push('/')"> Название сайта <span class="name-add">(переход на главную страницу)</span></div>
    <div class="navbar__btns">
       <my-button class="nav-btn" @click="$router.push('/posts')"> Посты</my-button>
-      <my-button class="nav-btn" @click="$router.push('/about')">О сайте</my-button>
+      <!-- <my-button class="nav-btn" @click="$router.push('/about')">О сайте</my-button> -->
       <my-button class="nav-btn" @click="$router.push('/store')"> Посты Store</my-button>
       <my-button class="nav-btn" @click="$router.push('/composition')"> Посты Compose</my-button>
    </div>
@@ -42,6 +42,9 @@ export default {
       font-size: 30px;
       color: aquamarine;
       cursor: pointer;
+   }
+   .name-site:hover {
+      color: azure;
    }
    .name-add {
       font-size: 18px;

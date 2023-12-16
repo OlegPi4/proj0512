@@ -1,51 +1,37 @@
 <template>
    <section>
-      <h2>Страница с постами</h2>
+      <h2>Посты Composition API</h2>
+      
       <my-input
          v-model="searchQuery" 
          placeholder="Поиск.... "  
          v-focus
       />
+
       <div class="app__btns">
-         <my-button
-            @click="showDialog"
-         >
+         <!-- <my-button  @click="showDialog">
             Создать пост
-         </my-button>
+         </my-button>   -->
          <my-select 
             v-model="selectedSort"
             :options="sortOptions"
          />
       </div>
       
-      <my-dialog v-model:show="dialogVisible"> 
-         <post-form @create="createPost"/>   
-      </my-dialog>
+      <!-- <my-dialog v-model:show="dialogVisible"> 
+         <post-form @create="createPost"/>    
+      </my-dialog>   -->
       <div>
          <div class="app-posts">
             <post-list :posts="sortedAndSearchedPosts"
-            @remove="removePost"
+            
             v-if="!isPostLoading"
             />
             <h3 v-else> Загрузка данных... </h3>
-            <div v-intersection="loadMorePosts" class="observer"></div>
-            <!-- <div class="page__wrapper"> //переделка в бесконечный список
-               <div 
-                  v-for="pageNumber in totalPages" 
-                  :key="pageNumber"
-                  class="page"
-                  :class="{
-                     'current-page': page === pageNumber 
-                  }"
-                  @click="changePage(pageNumber)"
-                  >
-                  {{ pageNumber }}
-               </div>
-
-            </div> -->
+            
          </div>
-      </div>
-      
+      </div> 
+   
    </section>
  </template>
 
@@ -57,6 +43,10 @@ import MyDialog from '@/components/UI/MyDialog.vue'
 import axios from 'axios';
 import MySelect from '@/components/UI/MySelect.vue'
 import MyInput from '@/components/UI/MyInput.vue'
+import { ref } from 'vue';
+import usePosts from '@/hooks/usePosts'
+import useSortedPosts from '@/hooks/useSortedPosts'
+import useSortedAndSearchedPosts from '@/hooks/useSortedAndSearchedPosts'
 
 
 export default {
@@ -68,102 +58,34 @@ export default {
       MySelect,
       MyInput,
    },
+   
    data(){
       return {
-         posts: [],
+         limit: 15,
          dialogVisible: false,
-         isPostLoading: false,
-         selectedSort: '',
-         searchQuery: '',
-         page: 1,
-         limit: 10,
-         totalPages: 0,
          sortOptions: [
             {value: 'title', name: 'По названию'},
             {value: 'body', name: 'По содержимому'},
-            //{value: 'id', name: 'По id'},  по id помилка
          ]
       }
    },
-   methods: {
-      createPost(post) {
-         this.posts.push(post)  
-      },
-      removePost(post){
-         this.posts = this.posts.filter(p => p.id != post.id)
-      },
-      showDialog() {
-         this.dialogVisible = true
-      },
-      // changePage(pageNumber) {  // переделка в добавляющийся список
-      //    this.page = pageNumber
-      // },
-      async fetchPosts() {
-         try {
-            this.isPostLoading = true
-            const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
-               params: {
-               _page: this.page,
-               _limit: this.limit
-               }
-            });
-            this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
-            this.posts = response.data;
-         } catch (e) {
-            alert('Ошибка получения данных')
-         } finally {
-            this.isPostLoading = false
-         }
-      },
-      async loadMorePosts() {
-         try {
-            this.page += 1
-            // this.isPostLoading = true // переделка в бесконечный список
-            const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
-               params: {
-               _page: this.page,
-               _limit: this.limit
-               }
-            });
-            this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
-            this.posts = [...this.posts, ...response.data];
-         } catch (e) {
-            alert('Ошибка получения данных')
-         } finally {
-            // this.isPostLoading = false //  переделка в бесконечный список
-         }
+   
+   setup(props) {
+      const {posts, totalPages, isPostLoading} = usePosts(15);
+      const {selectedSort, sortedPosts} = useSortedPosts(posts);
+      const {searchQuery, sortedAndSearchedPosts} = useSortedAndSearchedPosts(sortedPosts) 
+      
+      return {
+          posts,
+          totalPages,
+          isPostLoading,
+          selectedSort, 
+          sortedPosts,
+          searchQuery, 
+          sortedAndSearchedPosts,
       }
-   },
-   mounted() {
-      this.fetchPosts();   //закоментированый ниже код перенесен в пользовательскую директиву VIntersection
-      // const options = {
-      //    //root: document.querySelector("#scrollArea"), не испотльзуем
-      //    rootMargin: "0px",
-      //    threshold: 1.0,
-      // };
-      // const callback = (entries, observer) => {
-      //    if (entries[0].isIntersecting && this.page < this.totalPages ) {
-      //       this.loadMorePosts()
-      //    }
-      // };
-      // const observer = new IntersectionObserver(callback, options);
-      //       observer.observe(this.$refs.observer);
-         },
-   watch: {
-      // page() {  // переделка в бесконечный список
-      //    this.fetchPosts();
-      // }
-   },
-   computed: {
-      sortedPosts() {
-         return [...this.posts].sort((post1, post2) => {
-            return post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
-         })
-      },
-      sortedAndSearchedPosts() {
-         return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
-      }
-   },
+   }
+   
 }
 </script>
 <style>
