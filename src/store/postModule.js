@@ -12,15 +12,26 @@ import axios from 'axios';
       sortOptions: [
          {value: 'title', name: 'По названию'},
          {value: 'body', name: 'По содержимому'},
-         //{value: 'userId', name: 'По user'}
+         {value: 'id', name: 'По id'}
       ]
     }),
     getters: {
-      sortedPosts(state) {
-         return [...state.posts].sort((post1, post2) => {
+      // sortedPosts(state) {
+      //    return [...state.posts].sort((post1, post2) => {
 
+      //       return post1[state.selectedSort]?.localeCompare(post2[state.selectedSort])
+      //    })
+      // },
+      sortedPosts(state) {
+   
+         if (state.selectedSort === 'body' || state.selectedSort === 'title') {
+            return [...state.posts].sort((post1, post2) => {
             return post1[state.selectedSort]?.localeCompare(post2[state.selectedSort])
-         })
+            })
+         } else {
+            return [...state.posts].sort((post1, post2) => { post1[state.selectedSort] - (post2[state.selectedSort])
+            })
+         }
       },
       sortedAndSearchedPosts(state, getters) {
          return getters.sortedPosts.filter(post => post.title.toLowerCase().includes(state.searchQuery.toLowerCase()))

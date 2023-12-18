@@ -5,7 +5,7 @@ export default function useSortedAndSearchedPosts(sortedPosts) {
    const sortedAndSearchedPosts = computed(() => {
       return sortedPosts.value.filter(post => post.title.toLowerCase().includes(searchQuery.value.toLowerCase()))
    })
-   
+   console.log(sortedAndSearchedPosts.value);
    return {
       searchQuery, sortedAndSearchedPosts
    }

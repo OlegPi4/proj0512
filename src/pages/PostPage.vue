@@ -81,7 +81,7 @@ export default {
          sortOptions: [
             {value: 'title', name: 'По названию'},
             {value: 'body', name: 'По содержимому'},
-            //{value: 'id', name: 'По id'},  по id помилка
+            {value: 'id', name: 'По id'},
          ]
       }
    },
@@ -155,10 +155,21 @@ export default {
       // }
    },
    computed: {
+      // sortedPosts() {
+      //    return [...this.posts].sort((post1, post2) => {
+      //       return post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
+      //    })
+      // },
       sortedPosts() {
-         return [...this.posts].sort((post1, post2) => {
+         
+         if (this.selectedSort === 'body' || this.selectedSort === 'title') {
+            return [...this.posts].sort((post1, post2) => {
             return post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
-         })
+            })
+         } else {
+            return [...this.posts].sort((post1, post2) => { post1[this.selectedSort] - (post2[this.selectedSort])
+            })
+         }
       },
       sortedAndSearchedPosts() {
          return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))

@@ -1,34 +1,38 @@
 <template>
    <section>
       <h2>Посты Composition API</h2>
-      
       <my-input
          v-model="searchQuery" 
          placeholder="Поиск.... "  
          v-focus
       />
-
       <div class="app__btns">
-         <!-- <my-button  @click="showDialog">
-            Создать пост
-         </my-button>   -->
          <my-select 
             v-model="selectedSort"
             :options="sortOptions"
          />
       </div>
-      
-      <!-- <my-dialog v-model:show="dialogVisible"> 
-         <post-form @create="createPost"/>    
-      </my-dialog>   -->
       <div>
          <div class="app-posts">
             <post-list :posts="sortedAndSearchedPosts"
-            
             v-if="!isPostLoading"
             />
             <h3 v-else> Загрузка данных... </h3>
-            
+            <!-- <div v-intersection="page" class="observer"></div> -->
+            <div class="page__wrapper"> 
+               <div 
+                  v-for="pageNumber in totalPages" 
+                  :key="pageNumber"
+                  class="page"
+                  :class="{
+                     'current-page': page === pageNumber 
+                  }"
+                  @click="changePage(pageNumber)"
+                  >
+                  {{ pageNumber }}
+               </div>
+
+            </div>
          </div>
       </div> 
    
@@ -40,14 +44,12 @@ import PostForm from '@/components/PostForm.vue'
 import PostList from '@/components/PostList.vue'
 import MyButton from '@/components/UI/MyButton.vue'
 import MyDialog from '@/components/UI/MyDialog.vue'
-import axios from 'axios';
 import MySelect from '@/components/UI/MySelect.vue'
 import MyInput from '@/components/UI/MyInput.vue'
-import { ref } from 'vue';
 import usePosts from '@/hooks/usePosts'
 import useSortedPosts from '@/hooks/useSortedPosts'
 import useSortedAndSearchedPosts from '@/hooks/useSortedAndSearchedPosts'
-
+import { ref } from 'vue'
 
 export default {
    components: {
@@ -61,7 +63,8 @@ export default {
    
    data(){
       return {
-         limit: 15,
+         
+         page: 2,
          dialogVisible: false,
          sortOptions: [
             {value: 'title', name: 'По названию'},
@@ -69,13 +72,25 @@ export default {
          ]
       }
    },
-   
+   props: {
+      limit: {
+         type: Number,
+         default: 10,
+      },
+      page: {
+         type: Number,
+         default: 3,
+      }
+
+   },
+   // включение хуков
    setup(props) {
-      const {posts, totalPages, isPostLoading} = usePosts(15);
+      const {posts, totalPages, isPostLoading} = usePosts(props.limit, props.page);
       const {selectedSort, sortedPosts} = useSortedPosts(posts);
       const {searchQuery, sortedAndSearchedPosts} = useSortedAndSearchedPosts(sortedPosts) 
       
       return {
+          
           posts,
           totalPages,
           isPostLoading,
@@ -84,8 +99,19 @@ export default {
           searchQuery, 
           sortedAndSearchedPosts,
       }
-   }
-   
+   },
+   methods: {
+      
+      changePage(pageNumber) {  
+         this.page = pageNumber
+         console.log(this.page)
+      },   
+   },
+   // watch: {
+   //    page() {  
+   //       this.fetchPosts();
+   //    }
+   // },
 }
 </script>
 <style>
